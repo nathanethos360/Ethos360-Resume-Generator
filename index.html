@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethos360 Candidate Summary Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Nunito Sans",sans-serif;background:#f5f2ef;color:#231f20;min-height:100vh;font-size:14px}
+header{background:#1b2b3a;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;border-bottom:3px solid #ee2946}
+.logo{font-family:"Bebas Neue",sans-serif;font-size:1.6rem;color:#fff;letter-spacing:1px}
+.logo span{color:#ee2946}
+.logo-sub{font-size:.52rem;letter-spacing:4px;text-transform:uppercase;color:#8fa3b1;display:block;margin-top:-3px}
+.hdr-r{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:#5a7a90;font-weight:700}
+.wrap{max-width:880px;margin:22px auto;padding:0 16px 60px}
+.card{background:#fff;border:1px solid #dde2e7;border-top:3px solid #1b2b3a;border-radius:4px;padding:22px 24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(27,43,58,.06)}
+.pill{display:inline-block;background:#ee2946;color:#fff;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:2px 10px;border-radius:2px;margin-bottom:6px;font-weight:700}
+.ct{font-size:1.05rem;font-weight:700;color:#1b2b3a;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px}
+.divider{height:1px;background:#dde2e7;margin:10px 0 16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+label{display:block;font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#4a5a68;margin-bottom:4px}
+input,select{width:100%;padding:8px 10px;border:1.5px solid #dde2e7;border-radius:3px;font-family:inherit;font-size:.88rem;color:#231f20;background:#fff;outline:none}
+input[readonly]{background:#f0f3f5;color:#7a8f9e;cursor:default}
+.hint{font-size:.68rem;color:#8fa3b1;margin-top:6px}
+#dz{border:2px dashed #c0cdd6;border-radius:4px;padding:30px 20px;text-align:center;background:#f8fafb;transition:all .2s}
+#dz.over{border-color:#ee2946;background:#fff5f6}
+#dz.ok{border-color:#28a745;background:#f0fff4;padding:20px}
+#dz.ok .ddef{display:none}
+#dz.ok .dok{display:flex}
+.ddef{pointer-events:none;display:block}
+.dm{font-family:"Bebas Neue",sans-serif;font-size:1.1rem;letter-spacing:2px;color:#1b2b3a;margin-bottom:6px}
+.ds{font-size:.72rem;color:#8fa3b1;margin-bottom:14px}
+.dok{display:none;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.dfn{font-weight:700;color:#1a6e2e;font-size:.88rem}
+.drm{background:none;border:1.5px solid #bbb;border-radius:3px;padding:3px 10px;font-size:.68rem;font-weight:700;color:#777;cursor:pointer;text-transform:uppercase}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:7px;background:#ee2946;color:#fff;border:none;padding:11px 22px;border-radius:3px;font-family:inherit;font-size:.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.btn:hover{background:#cc1f38}
+.btn:disabled{background:#b0bec5;cursor:not-allowed}
+.btn-ol{background:transparent;color:#1b2b3a;border:2px solid #1b2b3a}
+.btn-ol:hover{background:#f0f3f5}
+.btn-nv{background:#1b2b3a}
+.btn-nv:hover{background:#263d50}
+.btn-sm{padding:7px 16px;font-size:.75rem}
+.browse-btn{background:#1b2b3a;color:#fff;border:none;padding:9px 22px;border-radius:3px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;pointer-events:all;letter-spacing:1px}
+.sload{display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:3px;font-size:.82rem;font-weight:600;margin-top:12px;background:#eef5fb;border:1px solid #b0cfe8;color:#1b2b3a}
+.serr{display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:3px;font-size:.82rem;font-weight:600;margin-top:12px;background:#fff0f2;border:1px solid #ee2946;color:#9c0020}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{width:15px;height:15px;border:2.5px solid rgba(27,43,58,.2);border-top-color:#1b2b3a;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+#out{display:none;margin-top:20px}
+.oc{background:#fff;border:1px solid #dde2e7;border-radius:4px;overflow:hidden;box-shadow:0 4px 16px rgba(27,43,58,.09)}
+.ob{background:#1b2b3a;padding:12px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ob-logo{font-family:"Bebas Neue",sans-serif;font-size:1.3rem;color:#fff;letter-spacing:1px}
+.ob-logo span{color:#ee2946}
+.ph{display:grid;grid-template-columns:1fr 1fr}
+.pl{padding:22px 26px;border-right:1px solid #dde2e7}
+.pr{background:#1b2b3a;padding:22px 26px}
+.p-role{display:inline-block;border:2px solid #ee2946;color:#1b2b3a;font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;margin-bottom:10px}
+.p-name{font-size:1.4rem;font-weight:700;color:#1b2b3a;margin-bottom:8px;line-height:1.1}
+.pm{font-size:.78rem;color:#231f20;margin-bottom:2px;line-height:1.5}
+.pm strong{color:#1b2b3a;font-weight:700;text-transform:uppercase;font-size:.63rem;letter-spacing:.8px}
+.psp{margin-top:10px;padding-top:10px;border-top:1px solid #dde2e7}
+.spn{font-weight:700;color:#1b2b3a}
+.sum-t{font-size:.8rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#ee2946;margin-bottom:12px}
+.sum-l{list-style:none;padding:0}
+.sum-l li{font-size:.78rem;color:#d0dde6;margin-bottom:9px;padding-left:13px;position:relative;line-height:1.55}
+.sum-l li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:2px;background:#ee2946;display:block}
+.sh{background:#ee2946;color:#fff;font-size:.78rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 26px}
+.sb{padding:16px 26px}
+.jh{background:rgba(27,43,58,.04);border-left:3px solid #ee2946;padding:6px 12px;margin-bottom:8px}
+.jt{font-size:.82rem;font-weight:700;text-transform:uppercase;color:#1b2b3a;letter-spacing:.5px}
+.jd{font-size:.65rem;color:#4a5a68;font-weight:700;text-transform:uppercase;margin-top:1px}
+.jbl{list-style:none;padding:0 0 12px;margin:0}
+.jbl li{font-size:.78rem;color:#3a4a56;padding:3px 0 3px 15px;position:relative;line-height:1.55;border-bottom:1px solid #f0f3f5}
+.jbl li:last-child{border-bottom:none}
+.jbl li::before{content:"-";position:absolute;left:3px;color:#ee2946;font-weight:700}
+.ql{list-style:none;padding:0}
+.qi{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid #f0f3f5;gap:12px}
+.qi:last-child{border-bottom:none}
+.qn{font-size:.78rem;font-weight:700;color:#1b2b3a}
+.qi2{font-size:.72rem;color:#4a5a68}
+.qy{font-size:.7rem;font-weight:700;color:#ee2946;white-space:nowrap;letter-spacing:1px;text-transform:uppercase}
+.ft{background:#1b2b3a;padding:9px 26px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ft-logo{font-family:"Bebas Neue",sans-serif;font-size:1rem;color:#fff;letter-spacing:1px}
+.ft-logo span{color:#ee2946}
+.fa{font-size:.65rem;color:#5a7a90}
+@media(max-width:600px){.g2,.g3,.ph{grid-template-columns:1fr}header{padding:0 14px}.wrap{padding:0 14px 50px}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">ETHOS<span>360</span></div>
+    <span class="logo-sub">Recruitment</span>
+  </div>
+  <div class="hdr-r">Candidate Summary Generator</div>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="pill">Step 01</div>
+    <div class="ct">Placement Details</div>
+    <div class="divider"></div>
+    <div class="g2">
+      <div><label>Role Applied For</label><input id="i-role" placeholder="e.g. Senior Conveyancer"></div>
+      <div><label>Expected Salary</label><input id="i-sal" placeholder="e.g. 100k + Super"></div>
+    </div>
+    <div class="g3" style="margin-bottom:12px">
+      <div><label>Availability</label><input id="i-avail" value="ASAP"></div>
+      <div><label>Visa Status</label>
+        <select id="i-visa">
+          <option>AU Citizen</option>
+          <option>AU Permanent Resident</option>
+          <option>Work Visa (482)</option>
+          <option>Student Visa</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div><label>Leave / Notice</label><input id="i-leave" value="N/A"></div>
+    </div>
+    <div class="g3">
+      <div><label>Ethos360 Specialist</label>
+        <select id="i-spec">
+          <option value="">-- Select --</option>
+          <option>Ezy Masih</option>
+          <option>Nathan Soti</option>
+        </select>
+      </div>
+      <div><label>Email</label><input id="i-email" readonly placeholder="Auto-filled"></div>
+      <div><label>Phone</label><input id="i-phone" readonly placeholder="Auto-filled"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pill">Step 02</div>
+    <div class="ct">Upload Resume</div>
+    <div class="divider"></div>
+    <div id="dz">
+      <div class="ddef">
+        <div style="color:#b0c4d0;margin-bottom:10px">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24">
+            <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+        </div>
+        <div class="dm">Drag and Drop Resume Here</div>
+        <div class="ds">PDF or Word (.docx) supported</div>
+        <button class="browse-btn" id="browse-btn">Browse and Select File</button>
+      </div>
+      <div class="dok">
+        <svg width="20" height="20" fill="none" stroke="#28a745" stroke-width="2.2" viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span class="dfn" id="fname"></span>
+        <button class="drm" id="rm-btn">Remove</button>
+      </div>
+    </div>
+    <input type="file" id="fi" accept=".pdf,.docx" style="display:none">
+    <div class="hint">PDF or Word (.docx) supported.</div>
+  </div>
+
+  <div class="acts">
+    <button class="btn" id="gen-btn">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      Generate Summary
+    </button>
+    <button class="btn btn-ol" id="clr-btn">Clear All</button>
+  </div>
+
+  <div class="sload" id="sl"><div class="spin"></div><span>Analysing resume and generating summary...</span></div>
+  <div class="serr" id="se"><span id="setxt">Error</span></div>
+
+  <div id="out">
+    <div class="oc">
+      <div class="ob">
+        <div class="ob-logo">ETHOS<span>360</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-nv btn-sm" id="cpy-btn">Copy Text</button>
+          <button class="btn btn-sm" id="rgn-btn">Regenerate</button>
+          <button class="btn btn-nv btn-sm" id="dl-btn">Download</button>
+        </div>
+      </div>
+      <div id="prev"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var SPECS = {
+  "Ezy Masih":   { email: "ezy@ethos360.com.au",   phone: "0480 026 392" },
+  "Nathan Soti": { email: "nathan@ethos360.com.au", phone: "0485 865 492" }
+};
+
+var gType=null, gB64=null, gTxt=null, gReady=false, lastResult=null;
+
+function g(id) { return document.getElementById(id); }
+function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+// Specialist autofill
+g("i-spec").addEventListener("change", function() {
+  var s = SPECS[this.value] || { email: "", phone: "" };
+  g("i-email").value = s.email;
+  g("i-phone").value = s.phone;
+});
+
+// File input
+g("fi").addEventListener("change", function() {
+  if (this.files[0]) handleFile(this.files[0]);
+});
+
+// Browse button
+g("browse-btn").addEventListener("click", function(e) {
+  e.stopPropagation();
+  g("fi").click();
+});
+
+// Remove button
+g("rm-btn").addEventListener("click", function(e) {
+  e.stopPropagation();
+  resetFile();
+});
+
+// Generate button
+g("gen-btn").addEventListener("click", doGenerate);
+
+// Clear button
+g("clr-btn").addEventListener("click", doClear);
+
+// Copy button
+g("cpy-btn").addEventListener("click", doCopy);
+
+// Regen button
+g("rgn-btn").addEventListener("click", doGenerate);
+
+// Download button
+g("dl-btn").addEventListener("click", doDownload);
+
+// Drag and drop
+var dz = g("dz");
+dz.addEventListener("dragover",  function(e) { e.preventDefault(); dz.classList.add("over"); });
+dz.addEventListener("dragleave", function()  { dz.classList.remove("over"); });
+dz.addEventListener("drop",      function(e) { e.preventDefault(); dz.classList.remove("over"); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+function resetFile() {
+  gType=null; gB64=null; gTxt=null; gReady=false;
+  dz.classList.remove("ok");
+  g("fi").value = "";
+}
+
+function handleFile(file) {
+  var n = file.name.toLowerCase();
+  if (!n.endsWith(".pdf") && !n.endsWith(".docx")) { alert("Please use a PDF or .docx file."); return; }
+  gReady=false; gB64=null; gTxt=null;
+  gType = n.endsWith(".pdf") ? "pdf" : "docx";
+  g("fname").textContent = file.name;
+  dz.classList.add("ok");
+  if (gType === "pdf") {
+    // Extract text from PDF using PDF.js
+    var r = new FileReader();
+    r.onload = function(ev) {
+      gB64 = ev.target.result.split(",")[1];
+      extractPdfText(ev.target.result);
+    };
+    r.readAsDataURL(file);
+  } else {
+    var r2 = new FileReader();
+    r2.onload = function(ev) { parseDocx(ev.target.result); };
+    r2.readAsArrayBuffer(file);
+  }
+}
+
+function parseDocx(buf) {
+  var bytes = new Uint8Array(buf), i = 0, promise = null;
+  while (i < bytes.length - 4) {
+    if (bytes[i]===0x50&&bytes[i+1]===0x4B&&bytes[i+2]===0x03&&bytes[i+3]===0x04) {
+      var cm  = bytes[i+8]  | (bytes[i+9]<<8);
+      var csz = bytes[i+18] | (bytes[i+19]<<8) | (bytes[i+20]<<16) | (bytes[i+21]<<24);
+      var fl  = bytes[i+26] | (bytes[i+27]<<8);
+      var el  = bytes[i+28] | (bytes[i+29]<<8);
+      var fn  = new TextDecoder().decode(bytes.slice(i+30, i+30+fl));
+      var ds  = i + 30 + fl + el;
+      if (fn === "word/document.xml") {
+        var cd = bytes.slice(ds, ds+csz);
+        promise = cm === 0 ? Promise.resolve(new TextDecoder("utf-8").decode(cd)) : inflate(cd);
+        break;
+      }
+      i = ds + Math.max(csz, 0);
+    } else { i++; }
+  }
+  if (!promise) { alert("Could not read Word doc. Please use a PDF."); resetFile(); return; }
+  promise.then(function(xml) {
+    gTxt = xml
+      .replace(/<w:p[ >]/g, "\n")
+      .replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"')
+      .replace(/\r/g, "").replace(/\n{3,}/g, "\n\n").trim();
+    gReady = true;
+  }).catch(function(e) { alert("Could not read Word doc: " + e.message); resetFile(); });
+}
+
+function inflate(data) {
+  var ds = new DecompressionStream("deflate-raw");
+  var w = ds.writable.getWriter(), r = ds.readable.getReader();
+  w.write(data); w.close();
+  var chunks = [];
+  function pump() { return r.read().then(function(x) { if (x.done) return; chunks.push(x.value); return pump(); }); }
+  return pump().then(function() {
+    var tot = 0;
+    for (var i=0; i<chunks.length; i++) tot += chunks[i].length;
+    var out = new Uint8Array(tot), off = 0;
+    for (var i=0; i<chunks.length; i++) { out.set(chunks[i], off); off += chunks[i].length; }
+    return new TextDecoder("utf-8").decode(out);
+  });
+}
+
+function extractPdfText(dataUrl) {
+  var pdfjsLib = window["pdfjs-dist/build/pdf"];
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  var loadingTask = pdfjsLib.getDocument(dataUrl);
+  loadingTask.promise.then(function(pdf) {
+    var numPages = pdf.numPages;
+    var textPromises = [];
+    for (var i = 1; i <= numPages; i++) {
+      textPromises.push(pdf.getPage(i).then(function(page) {
+        return page.getTextContent().then(function(tc) {
+          return tc.items.map(function(item) { return item.str; }).join(" ");
+        });
+      }));
+    }
+    Promise.all(textPromises).then(function(pages) {
+      gTxt = pages.join("\n\n");
+      gReady = true;
+    });
+  }).catch(function(err) {
+    // Fallback - just mark as ready and send base64
+    console.warn("PDF text extraction failed, using base64:", err);
+    gTxt = "[PDF content - please extract text]";
+    gReady = true;
+  });
+}
+
+function showLoad() { g("sl").style.display="flex"; g("se").style.display="none"; }
+function showErr(m) { g("sl").style.display="none"; g("se").style.display="flex"; g("setxt").textContent=m; }
+function hideSts()  { g("sl").style.display="none"; g("se").style.display="none"; }
+
+function doGenerate() {
+  var role  = g("i-role").value.trim();
+  var sal   = g("i-sal").value.trim() || "Not specified";
+  var avail = g("i-avail").value.trim();
+  var visa  = g("i-visa").value;
+  var leave = g("i-leave").value.trim();
+  var spec  = g("i-spec").value.trim();
+  var email = g("i-email").value.trim();
+  var phone = g("i-phone").value.trim();
+
+  if (!gReady) { alert("Please upload a resume first."); return; }
+  if (!role)   { alert("Please enter the role."); return; }
+
+  g("gen-btn").disabled = true;
+  g("out").style.display = "none";
+  showLoad();
+
+  var prompt = "You are a recruitment assistant for Ethos360.\n"
+    + "Read the resume and return ONLY a valid JSON object. No markdown, no backticks.\n\n"
+    + "Placement details:\n"
+    + "role: " + role + "\n"
+    + "salary: " + sal + "\n"
+    + "availability: " + avail + "\n"
+    + "visa: " + visa + "\n"
+    + "leave: " + leave + "\n"
+    + "specialist: " + spec + "\n"
+    + "email: " + email + "\n"
+    + "phone: " + phone + "\n\n"
+    + "Return this exact JSON shape:\n"
+    + "{\"candidateName\":\"\",\"role\":\"\",\"availability\":\"\",\"salary\":\"\",\"visa\":\"\",\"leave\":\"\","
+    + "\"specialist\":\"\",\"email\":\"\",\"phone\":\"\","
+    + "\"consultantSummary\":[\"\",\"\",\"\"],"
+    + "\"workExperience\":[{\"title\":\"\",\"employer\":\"\",\"dates\":\"\",\"bullets\":[\"\"]}],"
+    + "\"qualifications\":[{\"name\":\"\",\"institution\":\"\",\"year\":\"\"}]}\n\n"
+    + "Rules:\n"
+    + "1. Extract candidateName from resume.\n"
+    + "2. Use placement details for all other fields.\n"
+    + "3. consultantSummary: 3 punchy professional bullets.\n"
+    + "4. workExperience: ALL roles. Lightly fix grammar. Keep all meaning.\n"
+    + "5. qualifications: reverse chronological.\n"
+    + "6. Return ONLY the JSON.";
+
+  // Always send as text to keep payload small and fast
+  var msgContent = "RESUME TEXT:\n\n" + (gTxt || "") + "\n\n" + prompt;
+
+  fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 2000,
+      system: "Return only valid JSON. No markdown. No explanation.",
+      messages: [{ role: "user", content: msgContent }]
+    })
+  })
+  .then(function(r) {
+    if (!r.ok) return r.text().then(function(t) { throw new Error("HTTP " + r.status + ": " + t.slice(0,200)); });
+    return r.json();
+  })
+  .then(function(data) {
+    if (data.error) throw new Error(data.error.type + ": " + data.error.message);
+    if (!data.content || !data.content.length) throw new Error("No content returned.");
+    var raw = "";
+    for (var i=0; i<data.content.length; i++) raw += (data.content[i].text || "");
+    raw = raw.trim().replace(/^```json\s*/,"").replace(/^```\s*/,"").replace(/\s*```$/,"").trim();
+    lastResult = JSON.parse(raw);
+    hideSts();
+    g("out").style.display = "block";
+    g("out").scrollIntoView({ behavior: "smooth", block: "start" });
+    renderPreview(lastResult);
+  })
+  .catch(function(err) { showErr(err.message || "Unknown error."); console.error(err); })
+  .finally(function() { g("gen-btn").disabled = false; });
+}
+
+function renderPreview(d) {
+  var h = "";
+  h += "<div class='ph'>";
+  h += "<div class='pl'>";
+  h += "<div class='p-role'>ROLE: " + esc(d.role) + "</div>";
+  h += "<div class='p-name'>" + esc(d.candidateName) + "</div>";
+  h += "<div class='pm'><strong>Availability: </strong>" + esc(d.availability) + "</div>";
+  h += "<div class='pm'><strong>Expected Salary: </strong>" + esc(d.salary) + "</div>";
+  h += "<div class='pm'><strong>Visa Status: </strong>" + esc(d.visa) + "</div>";
+  h += "<div class='pm'><strong>Leave: </strong>" + esc(d.leave) + "</div>";
+  h += "<div class='psp'>";
+  h += "<div class='pm spn'>" + esc(d.specialist) + "</div>";
+  if (d.email) h += "<div class='pm'>" + esc(d.email) + "</div>";
+  if (d.phone) h += "<div class='pm'>" + esc(d.phone) + "</div>";
+  h += "</div></div>";
+  h += "<div class='pr'>";
+  h += "<div class='sum-t'>Consultant Summary</div>";
+  h += "<ul class='sum-l'>";
+  for (var i=0; i<d.consultantSummary.length; i++) h += "<li>" + esc(d.consultantSummary[i]) + "</li>";
+  h += "</ul></div></div>";
+  h += "<div class='sh'>Work Experience</div><div class='sb'>";
+  for (var j=0; j<d.workExperience.length; j++) {
+    var job = d.workExperience[j];
+    h += "<div class='jh'><div class='jt'>" + esc(job.title) + " | " + esc(job.employer) + "</div>";
+    h += "<div class='jd'>" + esc(job.dates) + "</div></div>";
+    h += "<ul class='jbl'>";
+    for (var k=0; k<job.bullets.length; k++) h += "<li>" + esc(job.bullets[k]) + "</li>";
+    h += "</ul>";
+  }
+  h += "</div><div class='sh'>Qualifications</div><div class='sb'><ul class='ql'>";
+  for (var q=0; q<d.qualifications.length; q++) {
+    var qu = d.qualifications[q];
+    h += "<li class='qi'><div><div class='qn'>" + esc(qu.name) + "</div><div class='qi2'>" + esc(qu.institution) + "</div></div>";
+    if (qu.year) h += "<div class='qy'>" + esc(qu.year) + "</div>";
+    h += "</li>";
+  }
+  h += "</ul></div>";
+  h += "<div class='ft'>";
+  h += "<div class='ft-logo'>ETHOS<span>360</span></div>";
+  h += "<div class='fa'>Hub Local, Level 3, Suite 10/1 Main St, Box Hill VIC 3128 | 1300 857 617 | hello@ethos360.com.au | ethos360.com.au</div>";
+  h += "</div>";
+  g("prev").innerHTML = h;
+}
+
+function doCopy() {
+  if (!lastResult) return;
+  var d = lastResult, t = "";
+  t += "ROLE: " + d.role + "\n\n";
+  t += "CANDIDATE: " + d.candidateName + "\n";
+  t += "AVAILABILITY: " + d.availability + "\n";
+  t += "EXPECTED SALARY: " + d.salary + "\n";
+  t += "VISA STATUS: " + d.visa + "\n";
+  t += "LEAVE: " + d.leave + "\n";
+  if (d.specialist) t += "\nETHOS360 SPECIALIST: " + d.specialist + "\n";
+  if (d.email) t += "EMAIL: " + d.email + "\n";
+  if (d.phone) t += "Phone: " + d.phone + "\n";
+  t += "\n--- CONSULTANT SUMMARY ---\n";
+  for (var i=0; i<d.consultantSummary.length; i++) t += "- " + d.consultantSummary[i] + "\n";
+  t += "\n--- WORK EXPERIENCE ---\n";
+  for (var j=0; j<d.workExperience.length; j++) {
+    var job = d.workExperience[j];
+    t += "\n" + job.title + " | " + job.employer + "\n" + job.dates + "\n";
+    for (var k=0; k<job.bullets.length; k++) t += "- " + job.bullets[k] + "\n";
+  }
+  t += "\n--- QUALIFICATIONS ---\n";
+  for (var q=0; q<d.qualifications.length; q++) {
+    var qu = d.qualifications[q];
+    t += "- " + qu.name + " - " + qu.institution + (qu.year ? " (" + qu.year + ")" : "") + "\n";
+  }
+  var btn = g("cpy-btn");
+  navigator.clipboard.writeText(t).then(function() {
+    btn.textContent = "Copied!";
+    setTimeout(function() { btn.textContent = "Copy Text"; }, 2000);
+  });
+}
+
+function doDownload() {
+  if (!lastResult) return;
+  var d = lastResult;
+  function h(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  var css = [
+    "*{box-sizing:border-box;margin:0;padding:0}",
+    "body{font-family:Arial,sans-serif;font-size:11px;color:#231f20}",
+    ".hdr{background:#1b2b3a;padding:14px 20px 10px;border-bottom:4px solid #ee2946}",
+    ".hl{font-size:20px;font-weight:900;color:#fff;letter-spacing:1px}",
+    ".hl span{color:#ee2946}",
+    ".hs{font-size:6px;letter-spacing:4px;text-transform:uppercase;color:#8fa3b1}",
+    ".tc{display:grid;grid-template-columns:1fr 1fr}",
+    ".lp{padding:14px 16px;border:1px solid #dde2e7}",
+    ".rp{background:#1b2b3a;padding:14px 16px}",
+    ".rt{border:2px solid #ee2946;color:#1b2b3a;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;display:inline-block;margin-bottom:7px}",
+    ".cn{font-size:16px;font-weight:700;color:#1b2b3a;margin-bottom:5px}",
+    ".m{font-size:8px;margin-bottom:2px}",
+    ".m b{text-transform:uppercase;font-size:6.5px;color:#1b2b3a}",
+    ".sp{margin-top:7px;padding-top:7px;border-top:1px solid #dde2e7}",
+    ".sn{font-weight:700;color:#1b2b3a;font-size:8.5px}",
+    ".st{color:#ee2946;font-size:7.5px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:9px}",
+    ".sl{list-style:none;padding:0}",
+    ".sl li{color:#d0dde6;font-size:7.5px;padding-left:10px;position:relative;margin-bottom:6px;line-height:1.5}",
+    ".sl li::before{content:'';position:absolute;left:0;top:5px;width:5px;height:1.5px;background:#ee2946;display:block}",
+    ".sh{background:#ee2946;color:#fff;font-size:7.5px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:5px 16px}",
+    ".sb{padding:11px 16px}",
+    ".jh{background:rgba(27,43,58,.05);border-left:3px solid #ee2946;padding:5px 9px;margin-bottom:6px}",
+    ".jt{font-size:8.5px;font-weight:700;text-transform:uppercase;color:#1b2b3a}",
+    ".jd{font-size:6.5px;color:#4a5a68;font-weight:700;text-transform:uppercase}",
+    ".jl{list-style:none;padding:0 0 9px}",
+    ".jl li{font-size:7.5px;color:#3a4a56;padding:2px 0 2px 11px;position:relative;line-height:1.5;border-bottom:1px solid #f5f5f5}",
+    ".jl li:last-child{border-bottom:none}",
+    ".jl li::before{content:'-';position:absolute;left:2px;color:#ee2946;font-weight:700}",
+    ".ql{list-style:none;padding:0}",
+    ".qi{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f5f5f5}",
+    ".qi:last-child{border-bottom:none}",
+    ".qn{font-size:8.5px;font-weight:700;color:#1b2b3a}",
+    ".qi2{font-size:7px;color:#4a5a68}",
+    ".qy{font-size:7.5px;font-weight:700;color:#ee2946;text-transform:uppercase;letter-spacing:1px}",
+    ".ft{background:#1b2b3a;padding:8px 16px;display:flex;align-items:center;gap:10px}",
+    ".fl{font-size:12px;font-weight:900;color:#fff;letter-spacing:1px}",
+    ".fl span{color:#ee2946}",
+    ".fa{font-size:6px;color:#5a7a90}",
+    ".terms{padding:20px 16px;page-break-before:always;break-before:page}",
+    ".terms h2{font-size:11px;font-weight:900;text-align:center;color:#1b2b3a;letter-spacing:1px;margin-bottom:14px;text-transform:uppercase;padding:7px 0;border-top:2px solid #ee2946;border-bottom:2px solid #ee2946}",
+    ".terms ol{padding-left:16px;font-size:7.5px;color:#231f20;line-height:1.7}",
+    ".terms li{margin-bottom:7px}",
+    ".terms ol ol{margin-top:5px}",
+    "@media print{@page{size:A4;margin:0}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.hdr,.rp,.sh,.ft{-webkit-print-color-adjust:exact;print-color-adjust:exact}}"
+  ].join("");
+
+  var body = "";
+  body += "<div class='hdr'><div class='hl'>ETHOS<span>360</span></div><div class='hs'>RECRUITMENT - CANDIDATE SUMMARY</div></div>";
+  body += "<div class='tc'>";
+  body += "<div class='lp'>";
+  body += "<div class='rt'>ROLE: " + h(d.role) + "</div>";
+  body += "<div class='cn'>" + h(d.candidateName) + "</div>";
+  body += "<div class='m'><b>Availability: </b>" + h(d.availability) + "</div>";
+  body += "<div class='m'><b>Salary: </b>" + h(d.salary) + "</div>";
+  body += "<div class='m'><b>Visa: </b>" + h(d.visa) + "</div>";
+  body += "<div class='m'><b>Leave: </b>" + h(d.leave) + "</div>";
+  body += "<div class='sp'><div class='sn'>" + h(d.specialist) + "</div>";
+  if (d.email) body += "<div class='m'>" + h(d.email) + "</div>";
+  if (d.phone) body += "<div class='m'>" + h(d.phone) + "</div>";
+  body += "</div></div>";
+  body += "<div class='rp'><div class='st'>Consultant Summary</div><ul class='sl'>";
+  for (var i=0; i<d.consultantSummary.length; i++) body += "<li>" + h(d.consultantSummary[i]) + "</li>";
+  body += "</ul></div></div>";
+  body += "<div class='sh'>Work Experience</div><div class='sb'>";
+  for (var j=0; j<d.workExperience.length; j++) {
+    var job = d.workExperience[j];
+    body += "<div class='jh'><div class='jt'>" + h(job.title) + " | " + h(job.employer) + "</div>";
+    body += "<div class='jd'>" + h(job.dates) + "</div></div><ul class='jl'>";
+    for (var k=0; k<job.bullets.length; k++) body += "<li>" + h(job.bullets[k]) + "</li>";
+    body += "</ul>";
+  }
+  body += "</div><div class='sh'>Qualifications</div><div class='sb'><ul class='ql'>";
+  for (var q=0; q<d.qualifications.length; q++) {
+    var qu = d.qualifications[q];
+    body += "<li class='qi'><div><div class='qn'>" + h(qu.name) + "</div><div class='qi2'>" + h(qu.institution) + "</div></div>";
+    if (qu.year) body += "<div class='qy'>" + h(qu.year) + "</div>";
+    body += "</li>";
+  }
+  body += "</ul></div>";
+  body += "<div class='ft'><div class='fl'>ETHOS<span>360</span></div>";
+  body += "<div class='fa'>Hub Local, Level 3, Suite 10/1 Main St, Box Hill VIC 3128 | 1300 857 617 | hello@ethos360.com.au | ethos360.com.au</div></div>";
+  body += "<div class='terms'><h2>Terms of Candidate Summary</h2><ol><li><strong>Terms of Candidate Summary</strong><ol type='a'>";
+  body += "<li>If you choose to interview or engage with a candidate presented to you by us then you acknowledge that the candidate has been introduced to you by us subject to our Terms of Engagement and any previous communications, interactions or employment relationships have no bearing on the fees payable according to our Terms of Engagement.</li>";
+  body += "<li>If you interview a candidate and within the immediately following twelve (12) months employ that candidate, whether it be on a contract, temporary or permanent role within your business, this will be considered as a successful placement and our Terms of Engagement will apply.</li>";
+  body += "<li>If you have any queries or concerns relating to these terms, or our Terms of Engagement please contact your relationship manager, call us on 1300 687 617 or contact us via email at hello@ethos360.com.au</li>";
+  body += "</ol></li></ol></div>";
+
+  var full = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Ethos360 - " + h(d.candidateName) + "</title><style>" + css + "</style></head><body>" + body + "<script>window.onbeforeprint=function(){document.title=" ";};window.onafterprint=function(){document.title="Ethos360 Candidate Summary";};</script></body></html>";
+  var b64 = btoa(unescape(encodeURIComponent(full)));
+  var a = document.createElement("a");
+  a.href = "data:text/html;base64," + b64;
+  a.download = "Ethos360 - " + d.candidateName + " - " + d.role + ".html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function doClear() {
+  g("i-role").value = "";
+  g("i-sal").value = "";
+  g("i-avail").value = "ASAP";
+  g("i-visa").value = "AU Citizen";
+  g("i-leave").value = "N/A";
+  g("i-spec").value = "";
+  g("i-email").value = "";
+  g("i-phone").value = "";
+  resetFile();
+  g("out").style.display = "none";
+  hideSts();
+  lastResult = null;
+}
+
+</script>
+</body>
+</html>
